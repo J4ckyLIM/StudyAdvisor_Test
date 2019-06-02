@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme formBug 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+        <h1>Create a bug</h1>
+
+        {{ form_start(formBug) }}
+
+        {{ form_row(formBug.title, {'attr': {'placeholder': "Title"}}) }}
+        {{ form_row(formBug.description, {'attr': {'placeholder': "Description"}}) }}
+        {{ form_row(formBug.state) }}
+        {{ form_row(formBug.severity) }}
+
+        <button type="submit" class="btn btn-success">Save</button>
+
+        {{ form_end(formBug) }}
+{% endblock %}

@@ -26,6 +26,12 @@ class User
      */
     private $password;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Bug", inversedBy="owner")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $bugs;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -51,6 +57,18 @@ class User
     public function setPassword(string $password): self
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function getBugs(): ?Bug
+    {
+        return $this->bugs;
+    }
+
+    public function setBugs(?Bug $bugs): self
+    {
+        $this->bugs = $bugs;
 
         return $this;
     }

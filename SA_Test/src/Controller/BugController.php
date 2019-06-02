@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Bug;
+use App\Form\BugType;
 use App\Repository\BugRepository;
-use http\Env\Response;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -35,6 +37,28 @@ class BugController extends AbstractController
     }
 
     /**
+     * @Route("/bug/new", name="bug_create")
+     * @Route("/bug/{id}/edit", name="bug_edit")
+     */
+    public function form(Bug $bug = null, Request $request, ObjectManager $manager){
+        if(!$bug){
+            $bug = new Bug();
+        }
+
+        $form = $this->createForm(BugType::class, $bug);
+        $form->handleRequest($request);
+        if($form->isSubmitted()&& $form->isValid()){
+            $manager->persist($bug);
+            $manager->flush();
+
+            return $this->redirectToRoute('bug_show', ['id' => $bug->getId()]);
+        }
+        return $this->render('bug/create.html.twig', [
+            'formBug' => $form->createView()
+        ]);
+    }
+
+    /**
      * @Route("/bug/{id}", name="bug_show")
      */
     public function show(Bug $bug){
@@ -43,10 +67,4 @@ class BugController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/bug/new", name="bug_create")
-     */
-    public function create(){
-        return $this->render('bug/create.html.twig');
-    }
 }

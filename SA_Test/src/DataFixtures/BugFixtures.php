@@ -12,10 +12,10 @@ class BugFixtures extends Fixture
     {
         for($i = 1; $i <= 10; $i++){
             $bug = new Bug();
-            $bug->setTitle("Ttire de l'article $i")
+            $bug->setTitle("Titre de l'article $i")
                 ->setDescription("Description $i")
                 ->setState("open")
-                ->setSeverityLevel("low");
+                ->setSeverity("low");
             $manager->persist($bug);
         }
         $manager->flush();

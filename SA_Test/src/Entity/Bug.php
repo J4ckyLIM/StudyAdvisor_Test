@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BugRepository")
@@ -18,11 +21,13 @@ class Bug
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=10, max=255)
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(min=20)
      */
     private $description;
 
@@ -34,7 +39,17 @@ class Bug
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $severity_level;
+    private $severity;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="bugs")
+     */
+    private $owner;
+
+    public function __construct()
+    {
+        $this->owner = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -77,14 +92,45 @@ class Bug
         return $this;
     }
 
-    public function getSeverityLevel(): ?string
+    public function getSeverity(): ?string
     {
-        return $this->severity_level;
+        return $this->severity;
     }
 
-    public function setSeverityLevel(string $severity_level): self
+    public function setSeverity(string $severity): self
     {
-        $this->severity_level = $severity_level;
+        $this->severity = $severity;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getOwner(): Collection
+    {
+        return $this->owner;
+    }
+
+    public function addOwner(User $owner): self
+    {
+        if (!$this->owner->contains($owner)) {
+            $this->owner[] = $owner;
+            $owner->setBugs($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOwner(User $owner): self
+    {
+        if ($this->owner->contains($owner)) {
+            $this->owner->removeElement($owner);
+            // set the owning side to null (unless already changed)
+            if ($owner->getBugs() === $this) {
+                $owner->setBugs(null);
+            }
+        }
 
         return $this;
     }
