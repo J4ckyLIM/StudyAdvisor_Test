@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'All my bugs' %}
+
+{%  block body %}
+   <section class="bugs">
+       {% for bug in bugs %}
+           <article>
+               <h2>{{ bug.title }}</h2>
+               <div class="content">
+                   <p>{{ bug.description }}</p>
+                   <a href="{{ path('bug_show', {'id': bug.id}) }}" class="btn btn-primary">See</a>
+               </div>
+           </article>
+       {% endfor %}
+   </section>
+{%  endblock %}
