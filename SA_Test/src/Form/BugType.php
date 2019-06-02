@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Bug;
+use App\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,6 +18,12 @@ class BugType extends AbstractType
             ->add('description')
             ->add('state')
             ->add('severity')
+            ->add('contributors', EntityType::class ,[
+                'class' => User::class,
+                'choice_label' => 'username',
+                'multiple' => true,
+                'required' => false
+            ])
         ;
     }
 

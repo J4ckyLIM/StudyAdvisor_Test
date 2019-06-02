@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -42,14 +43,16 @@ class Bug
     private $severity;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="bugs")
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="buglist")
      */
-    private $owner;
+    private $contributors;
 
     public function __construct()
     {
-        $this->owner = new ArrayCollection();
+        $this->contributors = new ArrayCollection();
     }
+
+
 
     public function getId(): ?int
     {
@@ -104,34 +107,31 @@ class Bug
         return $this;
     }
 
+
     /**
      * @return Collection|User[]
      */
-    public function getOwner(): Collection
+    public function getContributors(): Collection
     {
-        return $this->owner;
+        return $this->contributors;
     }
 
-    public function addOwner(User $owner): self
+    public function addContributor(User $contributor): self
     {
-        if (!$this->owner->contains($owner)) {
-            $this->owner[] = $owner;
-            $owner->setBugs($this);
+        if (!$this->contributors->contains($contributor)) {
+            $this->contributors[] = $contributor;
         }
 
         return $this;
     }
 
-    public function removeOwner(User $owner): self
+    public function removeContributor(User $contributor): self
     {
-        if ($this->owner->contains($owner)) {
-            $this->owner->removeElement($owner);
-            // set the owning side to null (unless already changed)
-            if ($owner->getBugs() === $this) {
-                $owner->setBugs(null);
-            }
+        if ($this->contributors->contains($contributor)) {
+            $this->contributors->removeElement($contributor);
         }
 
         return $this;
     }
+    
 }

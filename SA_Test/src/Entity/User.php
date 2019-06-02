@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -27,10 +29,15 @@ class User
     private $password;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Bug", inversedBy="owner")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToMany(targetEntity="App\Entity\Bug", mappedBy="contributors")
      */
-    private $bugs;
+    private $buglist;
+
+
+    public function __construct()
+    {
+        $this->buglist = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -61,15 +68,32 @@ class User
         return $this;
     }
 
-    public function getBugs(): ?Bug
+    /**
+     * @return Collection|Bug[]
+     */
+    public function getBuglist(): Collection
     {
-        return $this->bugs;
+        return $this->buglist;
     }
 
-    public function setBugs(?Bug $bugs): self
+    public function addBuglist(Bug $buglist): self
     {
-        $this->bugs = $bugs;
+        if (!$this->buglist->contains($buglist)) {
+            $this->buglist[] = $buglist;
+            $buglist->addContributor($this);
+        }
 
         return $this;
     }
+
+    public function removeBuglist(Bug $buglist): self
+    {
+        if ($this->buglist->contains($buglist)) {
+            $this->buglist->removeElement($buglist);
+            $buglist->removeContributor($this);
+        }
+
+        return $this;
+    }
+
 }
