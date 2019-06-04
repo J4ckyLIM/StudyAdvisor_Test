@@ -8,6 +8,13 @@
         </div>
         <div class="content">
             <h3>Contributors</h3>
+            <ul>
+                {% for contributor in bug.contributors %}
+                    <li class="list-group-item">
+                        {{ contributor.username }}
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
     </article>
 {% endblock %}

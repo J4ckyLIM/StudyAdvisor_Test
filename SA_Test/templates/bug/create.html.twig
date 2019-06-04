@@ -11,7 +11,7 @@
         {{ form_row(formBug.description, {'attr': {'placeholder': "Description"}}) }}
         {{ form_row(formBug.state) }}
         {{ form_row(formBug.severity) }}
-
+        {{ form_rest(formBug) }}
         <button type="submit" class="btn btn-success">Save</button>
 
         {{ form_end(formBug) }}

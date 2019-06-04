@@ -1,0 +1,13 @@
+{%  extends 'base.html.twig' %}
+
+{% block body  %}
+
+    <h1>Get Started</h1>
+
+    {{ form_start(form) }}
+    {{ form_row(form.username , {'attr': {'placeholder': 'Your username'}}) }}
+    {{ form_row(form.password, {'attr': {'placeholder': 'Your password'}}) }}
+    {{ form_row(form.confirm_password, {'attr': {'placeholder': 'Confirm your password'}}) }}
+    <button type="submit" class="btn btn-success">Register</button>
+    {{ form_end(form) }}
+{% endblock %}
